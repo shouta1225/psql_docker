@@ -1,0 +1,21 @@
+version: '3' # 1.x~3.xで指定可能、docker-composeのバージョン選択
+services: #立ち上げるdockerコンテナの情報を書く。(今回は1つだが、複数のコンテナを管理できる)
+  ubuntu:
+    build: ./ubuntu
+    # ports:
+      # - 8081:8080
+    volumes:
+      - ./ubuntu:/ubuntu
+
+
+  postgres: #立ち上げるコンテナの名前(任意) 
+    build: ./postgres #buildの「.」は同じ階層のdockerfileの環境を指す。(普通はdocker hubから取ってくる環境のベースを指定する)
+    ports: 
+      - 5433:5432 #左側が外部からアクセス時のポート、右側がdockerコンテナからアクセスする時のポート番号
+    environment: #DBについての環境変数設定(ユーザー名やパスワードなど)
+      POSTGRES_USER: shouta
+      POSTGRES_DB: test
+      POSTGRES_PASSWORD: shouta
+    volumes:
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    
